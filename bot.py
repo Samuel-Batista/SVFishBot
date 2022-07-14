@@ -1,11 +1,12 @@
+from turtle import width
 from window_capture import WindowCapture
 import cv2 as cv
 import pyautogui
 from time import sleep
 
 cap = WindowCapture("Stardew Valley")
-
-game_resolution = (1280, 721)
+game_height, game_width, _ = cap.get_screenshot().shape
+game_resolution = (game_width, game_height)
 
 def trow():
     print('starting lauching...')
@@ -67,14 +68,66 @@ def wait_for_fish():
         cv.imshow('found_spot', found_alert)
         cv.waitKey(1)
 
-    x, y = cap.get_screen_position(((game_resolution[0]//2), game_resolution[1]//2))
-    pyautogui.mouseDown(x, y)
-    sleep(0.3)
-    pyautogui.mouseUp(x, y)
 
-def check_fish():
-    pass
+def cath_fish():
+    # x, y = cap.get_screen_position(((game_resolution[0]//2), game_resolution[1]//2))
+    # pyautogui.mouseDown(x, y)
+    # sleep(0.3)
+    # pyautogui.mouseUp(x, y)
+
+    game_screenshot = cap.get_screenshot()
+    screen_height, screen_width, _ = game_screenshot.shape
+    screen_center_x, screen_center_y = screen_width // 2, screen_height // 2
+
+    while True:
+        game_screenshot = cap.get_screenshot()
+        cath_bar = game_screenshot[20:screen_height-130, screen_center_x+140:screen_center_x+215]
+        cath_bar_height, cath_bar_widht, _ = cath_bar.shape
+        bar_center_x, bar_center_y = cath_bar_widht // 2, cath_bar_height // 2
+
+        # cv.rectangle(cath_bar, (bar_center_x - 30, bar_center_y - 5), (bar_center_x - 25, bar_center_y - 2), (0, 0, 255), 1)
+        bar_spot = cath_bar[bar_center_y-5:bar_center_y-4, bar_center_x-30:bar_center_x - 29]
+
+        # [ 78 174 232]
+        b_bs, g_bs, r_bs = bar_spot[0][0]
+        if b_bs == 78 and g_bs == 174 and r_bs == 232:
+            # peixe e um sequencia de verdes e azuis
+            # barra de pesca e uma sequencia igual de tons de verde
+            # fundo sequencia variada de tons de azuis
+
+            # encontrar a parte de cima da barra de pesca
+            for h in range(cath_bar_height):
+                b_p, g_p, r_p  = cath_bar[h:h+1, bar_center_x:bar_center_x+1][0][0]
+
+                if b_p < 200:
+                    count = 0
+
+                    # verify 10 sequence
+                    if h < cath_bar_height - 10:
+                        for plus in range(10):
+                            b_pp, g_pp, r_pp  = cath_bar[h+plus:(h+1)+plus, bar_center_x:bar_center_x+1][0][0]
+                            if b_pp == b_p and g_pp == g_p and r_pp == r_p:
+                                count += 1
+                    
+                    if count >= 10:
+                        cv.line(cath_bar, (bar_center_x - 50, h-2), (bar_center_x + 50, h-2), (0, 0, 255), 2)
+                        break
+    
+                
 
 
-trow()
-wait_for_fish()
+
+            cv.imshow('cathBar', cath_bar)
+            cv.waitKey(1)
+        
+        else:
+            print('fishing done')
+            cv.destroyAllWindows()
+            break
+       
+
+
+# trow()
+# wait_for_fish()
+sleep(2)
+cath_fish()
