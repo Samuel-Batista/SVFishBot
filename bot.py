@@ -69,7 +69,6 @@ def wait_for_fish():
 
 
 
-
 def cath_fish():
     x, y = cap.get_screen_position(((game_resolution[0]//2), game_resolution[1]//2))
     pyautogui.mouseDown(x, y)
