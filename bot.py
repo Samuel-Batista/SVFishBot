@@ -184,5 +184,5 @@ def cath_fish():
 
 trow()
 wait_for_fish()
-sleep(2)
+sleep(1)
 cath_fish()
