@@ -1,4 +1,3 @@
-from cv2 import FarnebackOpticalFlow
 from window_capture import WindowCapture
 import cv2 as cv
 import pyautogui
