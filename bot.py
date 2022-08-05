@@ -75,6 +75,8 @@ def cath_fish():
     sleep(0.3)
     pyautogui.mouseUp(x, y)
 
+    sleep(1)
+
     game_screenshot = cap.get_screenshot()
     screen_height, screen_width, _ = game_screenshot.shape
     screen_center_x, screen_center_y = screen_width // 2, screen_height // 2
@@ -183,5 +185,4 @@ def cath_fish():
 
 trow()
 wait_for_fish()
-sleep(1)
 cath_fish()
